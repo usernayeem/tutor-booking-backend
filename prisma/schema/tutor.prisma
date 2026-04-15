@@ -1,0 +1,22 @@
+model Tutor {
+  id             String         @id @default(uuid())
+  userId         String         @unique
+  user           User           @relation(fields: [userId], references: [id])
+  bio            String?
+  profilePhoto   String?
+  contactNumber  String?
+  hourlyRate     Float          @default(0.0)
+  experience     Int            @default(0) // in years
+  qualification  String?
+  isAvailable    Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  isDeleted      Boolean        @default(false)
+  
+  tutorSubjects  TutorSubject[]
+  tutorSchedules TutorSchedule[]
+  sessions       Session[]
+  reviews        Review[]
+
+  @@map("tutors")
+}

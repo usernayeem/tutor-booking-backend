@@ -1,0 +1,13 @@
+model Schedule {
+  id             String          @id @default(uuid())
+  startTime      DateTime
+  endTime        DateTime
+  dayOfWeek      String          // e.g., "Monday", "Tuesday"
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  tutorSchedules TutorSchedule[]
+  sessions       Session[]
+
+  @@map("schedules")
+}

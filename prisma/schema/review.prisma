@@ -1,0 +1,16 @@
+model Review {
+  id        String   @id @default(uuid())
+  studentId String
+  tutorId   String
+  sessionId String   @unique
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student   Student  @relation(fields: [studentId], references: [id])
+  tutor     Tutor    @relation(fields: [tutorId], references: [id])
+  session   Session  @relation(fields: [sessionId], references: [id])
+
+  @@map("reviews")
+}

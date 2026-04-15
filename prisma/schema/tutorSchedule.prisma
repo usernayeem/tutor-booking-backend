@@ -1,0 +1,13 @@
+model TutorSchedule {
+  tutorId    String
+  scheduleId String
+  isBooked   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  tutor      Tutor    @relation(fields: [tutorId], references: [id])
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+  session    Session?
+
+  @@id([tutorId, scheduleId])
+  @@map("tutor_schedules")
+}
