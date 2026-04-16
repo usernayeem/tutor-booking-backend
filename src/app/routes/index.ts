@@ -6,6 +6,7 @@ import { UserRoutes } from "../module/user/user.route";
 
 import { ScheduleRoutes } from "../module/schedule/schedule.route";
 import { TutorRoutes } from "../module/tutor/tutor.route";
+import { TutorScheduleRoutes } from "../module/tutorSchedule/tutorSchedule.route";
 
 const router = express.Router();
 
@@ -33,6 +34,10 @@ const moduleRoutes = [
     {
         path: "/schedules",
         route: ScheduleRoutes,
+    },
+    {
+        path: "/tutor-schedules",
+        route: TutorScheduleRoutes,
     },
 ];
 
