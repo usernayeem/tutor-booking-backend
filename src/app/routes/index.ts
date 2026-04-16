@@ -9,6 +9,7 @@ import { SessionRoutes } from "../module/session/session.route";
 import { TutorRoutes } from "../module/tutor/tutor.route";
 import { TutorScheduleRoutes } from "../module/tutorSchedule/tutorSchedule.route";
 import { ReviewRoutes } from "../module/review/review.route";
+import { AdminRoutes } from "../module/admin/admin.route";
 
 const router = express.Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
     {
         path: "/reviews",
         route: ReviewRoutes,
+    },
+    {
+        path: "/admin",
+        route: AdminRoutes,
     },
 ];
 
