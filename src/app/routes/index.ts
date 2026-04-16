@@ -3,7 +3,7 @@ import { AuthRoutes } from "../module/auth/auth.route";
 import { StudentRoutes } from "../module/student/student.route";
 import { SubjectRoutes } from "../module/subject/subject.route";
 import { UserRoutes } from "../module/user/user.route";
-
+import { PaymentRoutes } from "../module/payment/payment.route";
 import { ScheduleRoutes } from "../module/schedule/schedule.route";
 import { SessionRoutes } from "../module/session/session.route";
 import { TutorRoutes } from "../module/tutor/tutor.route";
@@ -43,6 +43,10 @@ const moduleRoutes = [
     {
         path: "/sessions",
         route: SessionRoutes,
+    },
+    {
+        path: "/payment",
+        route: PaymentRoutes,
     },
 ];
 
