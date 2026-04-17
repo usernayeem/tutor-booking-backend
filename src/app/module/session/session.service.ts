@@ -1,6 +1,6 @@
 import status from "http-status";
 import { Prisma, Session } from "../../../generated/prisma/client";
-import { PaymentStatus, Role, SessionStatus } from "../../../generated/prisma/enums";
+import { PaymentStatus, Role, SessionStatus } from "../../../generated/prisma/client";
 import AppError from "../../errorHelpers/AppError";
 import { IQueryParams } from "../../interfaces/query.interface";
 import { IRequestUser } from "../../interfaces/requestUser.interface";

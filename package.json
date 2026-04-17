@@ -22,6 +22,7 @@
   "packageManager": "pnpm@10.20.0",
   "type": "module",
   "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "better-auth": "^1.4.18",

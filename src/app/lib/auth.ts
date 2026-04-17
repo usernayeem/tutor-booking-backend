@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { bearer, emailOTP } from "better-auth/plugins";
-import { Role, UserStatus } from "../../generated/prisma/enums";
+import { Role, UserStatus } from "../../generated/prisma/client";
 import { envVars } from "../config/env";
 import { sendEmail } from "../utils/email";
 import { prisma } from "./prisma";
@@ -80,6 +80,7 @@ export const auth = betterAuth({
         emailOTP({
             overrideDefaultEmailVerification: true,
             async sendVerificationOTP({email, otp, type}) {
+                if (email === envVars.SUPER_ADMIN_EMAIL) { return; }
                 if(type === "email-verification"){
                   const user = await prisma.user.findUnique({
                     where : { email, }

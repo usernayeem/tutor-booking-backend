@@ -1,6 +1,6 @@
 import status from "http-status";
 import { Prisma, Payment } from "../../../generated/prisma/client";
-import { PaymentStatus } from "../../../generated/prisma/enums";
+import { PaymentStatus } from "../../../generated/prisma/client";
 import { envVars } from "../../config/env";
 import { stripe } from "../../config/stripe.config";
 import AppError from "../../errorHelpers/AppError";
