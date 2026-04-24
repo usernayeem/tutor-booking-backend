@@ -14,10 +14,18 @@ const getAllSubjects = async (): Promise<Subject[]> => {
 };
 
 const deleteSubject = async (id: string): Promise<Subject> => {
-    const subject = await prisma.subject.delete({
-        where: { id }
+    return await prisma.$transaction(async (tx) => {
+        // Delete dependent records first to avoid foreign key constraints
+        await tx.tutorSubject.deleteMany({
+            where: { subjectId: id }
+        });
+        
+        const subject = await tx.subject.delete({
+            where: { id }
+        });
+        
+        return subject;
     });
-    return subject;
 };
 
 export const SubjectService = {

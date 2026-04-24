@@ -100,7 +100,20 @@ const createAdmin = async (payload: ICreateAdminPayload) => {
     return adminUser;
 };
 
+const updateUser = async (id: string, payload: any) => {
+    const userExists = await prisma.user.findUnique({ where: { id } });
+    if (!userExists) throw new AppError(status.NOT_FOUND, "User not found");
+
+    const updatedUser = await prisma.user.update({
+        where: { id },
+        data: payload,
+    });
+
+    return updatedUser;
+};
+
 export const UserService = {
     createTutor,
     createAdmin,
+    updateUser,
 };

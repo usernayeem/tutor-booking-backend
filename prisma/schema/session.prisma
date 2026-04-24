@@ -11,10 +11,10 @@ model Session {
 
   student       Student        @relation(fields: [studentId], references: [id])
   tutor         Tutor          @relation(fields: [tutorId], references: [id])
-  schedule      Schedule       @relation(fields: [scheduleId], references: [id])
+  schedule      Schedule       @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   
   // A session locks a specific tutor's schedule slot
-  tutorSchedule TutorSchedule  @relation(fields: [tutorId, scheduleId], references: [tutorId, scheduleId])
+  tutorSchedule TutorSchedule  @relation(fields: [tutorId, scheduleId], references: [tutorId, scheduleId], onDelete: Cascade)
   
   payment       Payment?
   review        Review?

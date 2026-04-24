@@ -20,3 +20,8 @@ export const createAdminValidationSchema = z.object({
         email: z.string({ required_error: "Email is required" }).email(),
     }),
 });
+
+export const updateUserValidationSchema = z.object({
+    status: z.enum(['ACTIVE', 'BLOCKED', 'DELETED', 'PENDING']).optional(),
+    createdAt: z.string().optional().transform((str) => str ? new Date(str) : undefined),
+});

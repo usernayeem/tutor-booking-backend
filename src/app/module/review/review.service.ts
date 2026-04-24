@@ -73,7 +73,6 @@ const getTutorReviews = async (tutorId: string) => {
                         select: {
                             name: true,
                             email: true,
-                            profilePhoto: true,
                         }
                     }
                 }

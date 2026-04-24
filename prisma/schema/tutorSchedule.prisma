@@ -5,7 +5,7 @@ model TutorSchedule {
   createdAt  DateTime @default(now())
 
   tutor      Tutor    @relation(fields: [tutorId], references: [id])
-  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   session    Session?
 
   @@id([tutorId, scheduleId])

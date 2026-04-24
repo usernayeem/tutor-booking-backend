@@ -10,7 +10,7 @@ model Review {
 
   student   Student  @relation(fields: [studentId], references: [id])
   tutor     Tutor    @relation(fields: [tutorId], references: [id])
-  session   Session  @relation(fields: [sessionId], references: [id])
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   @@map("reviews")
 }

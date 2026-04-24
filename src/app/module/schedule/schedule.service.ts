@@ -57,27 +57,37 @@ const createSchedules = async (payload: ICreateSchedulePayload) => {
         daysCount++;
     }
 
-    // Insert only if they don't exactly exist. We can't do upsert bulk easily, so let's check one by one or createMany.
-    // For simplicity of bulk:
-    const validSchedules = [];
-    for (const schedule of schedulesToCreate) {
-        const isExist = await prisma.schedule.findFirst({
+    // Fetch existing schedules in bulk to avoid sequential queries
+    let validSchedules = schedulesToCreate;
+    if (schedulesToCreate.length > 0) {
+        const startRange = schedulesToCreate[0].startTime;
+        const endRange = schedulesToCreate[schedulesToCreate.length - 1].endTime;
+
+        const existingSchedules = await prisma.schedule.findMany({
             where: {
-                startTime: schedule.startTime,
-                endTime: schedule.endTime,
+                startTime: { gte: startRange },
+                endTime: { lte: endRange },
             }
         });
-        if (!isExist) validSchedules.push(schedule);
+
+        validSchedules = schedulesToCreate.filter(sc => 
+            !existingSchedules.some(ex => 
+                ex.startTime.getTime() === sc.startTime.getTime() && 
+                ex.endTime.getTime() === sc.endTime.getTime()
+            )
+        );
     }
 
-    let createdSchedules = [];
     if (validSchedules.length > 0) {
-       createdSchedules = await prisma.schedule.createManyAndReturn({
+       await prisma.schedule.createMany({
            data: validSchedules
        });
+       
+       // Note: createMany doesn't return the created records, so we can fetch them or just return the validSchedules payload
+       return validSchedules;
     }
 
-    return createdSchedules;
+    return [];
 };
 
 const getAllSchedules = async (query: IQueryParams) => {
@@ -127,10 +137,17 @@ const deleteSchedule = async (id: string) => {
         throw new AppError(status.NOT_FOUND, "Schedule not found");
     }
 
-    // Delete schedule slot
-    await prisma.schedule.delete({
-        where: { id }
-    });
+    // Delete schedule slot. Handle cases where it is linked to tutor schedules or sessions.
+    try {
+        await prisma.schedule.delete({
+            where: { id }
+        });
+    } catch (error: any) {
+        if (error.code === 'P2003') {
+            throw new AppError(status.CONFLICT, "Cannot delete this schedule because it is currently selected by tutors or has active sessions.");
+        }
+        throw error;
+    }
 
     return { message: "Schedule deleted successfully" };
 };

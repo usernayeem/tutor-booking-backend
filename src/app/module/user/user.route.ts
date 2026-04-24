@@ -3,7 +3,7 @@ import { Role } from "../../../generated/prisma/client";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { UserController } from "./user.controller";
-import { createAdminValidationSchema, createTutorValidationSchema } from "./user.validation";
+import { createAdminValidationSchema, createTutorValidationSchema, updateUserValidationSchema } from "./user.validation";
 
 const router = Router();
 
@@ -21,6 +21,14 @@ router.post(
     checkAuth(Role.SUPER_ADMIN),
     validateRequest(createAdminValidationSchema),
     UserController.createAdmin
+);
+
+// Admin and Super Admin can update base user fields (status, join date)
+router.patch(
+    "/:id",
+    checkAuth(Role.SUPER_ADMIN, Role.ADMIN),
+    validateRequest(updateUserValidationSchema),
+    UserController.updateUser
 );
 
 export const UserRoutes = router;
