@@ -32,15 +32,22 @@ app.use(
         ],
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: [
+            "Content-Type", 
+            "Authorization", 
+            "Origin", 
+            "Accept", 
+            "X-Requested-With"
+        ],
     })
 );
+
 
 // Mount better-auth at /api/auth — handles signup, signin, OTP, etc.
 app.use("/api/auth", toNodeHandler(auth));
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 
 app.use("/api/v1", IndexRoutes);

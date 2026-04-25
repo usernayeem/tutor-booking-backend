@@ -4,6 +4,7 @@ export const tutorSearchableFields = [
     "qualification",
     "bio",
     "contactNumber",
+    "user.name",
 ];
 
 export const tutorFilterableFields = [
