@@ -1,6 +1,6 @@
 import status from "http-status";
 import { Prisma, Payment } from "../../../generated/prisma/client";
-import { PaymentStatus } from "../../../generated/prisma/client";
+import { PaymentStatus, SessionStatus } from "../../../generated/prisma/client";
 import { envVars } from "../../config/env";
 import { stripe } from "../../config/stripe.config";
 import AppError from "../../errorHelpers/AppError";
@@ -26,7 +26,7 @@ const createCheckoutSession = async (sessionId: string, user: IRequestUser) => {
         throw new AppError(status.NOT_FOUND, "Session not found");
     }
 
-    if (sessionDetail.student.userId !== user.id) {
+    if (sessionDetail.student.userId !== user.userId) {
         throw new AppError(status.FORBIDDEN, "You can only pay for your own sessions");
     }
 
@@ -76,19 +76,24 @@ const handleWebhook = async (payload: any) => {
         const transactionId = session.metadata?.transactionId;
 
         if (transactionId) {
-            await prisma.$transaction(async (tx) => {
+            try {
                 // Update payment status
-                const payment = await tx.payment.update({
+                const payment = await prisma.payment.update({
                     where: { transactionId },
                     data: { paymentStatus: PaymentStatus.PAID }
                 });
 
-                // Update session payment status
-                await tx.session.update({
+                // Update session payment status and promote to SCHEDULED
+                await prisma.session.update({
                     where: { id: payment.sessionId },
-                    data: { paymentStatus: PaymentStatus.PAID }
+                    data: { 
+                        paymentStatus: PaymentStatus.PAID,
+                        status: SessionStatus.SCHEDULED 
+                    }
                 });
-            });
+            } catch (error) {
+                throw error;
+            }
         }
     }
 
@@ -110,10 +115,10 @@ const getPaymentBySessionId = async (sessionId: string, user: IRequestUser) => {
     }
 
     // Admins can see all. Rest restricted.
-    if (user.role === 'STUDENT' && payment.session.student.userId !== user.id) {
+    if (user.role === 'STUDENT' && payment.session.student.userId !== user.userId) {
          throw new AppError(status.FORBIDDEN, "Access Denied");
     }
-    if (user.role === 'TUTOR' && payment.session.tutor.userId !== user.id) {
+    if (user.role === 'TUTOR' && payment.session.tutor.userId !== user.userId) {
          throw new AppError(status.FORBIDDEN, "Access Denied");
     }
 

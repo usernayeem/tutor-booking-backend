@@ -93,18 +93,34 @@ const getTutorById = async (id: string) => {
     return tutor;
 };
 
-const updateTutor = async (id: string, payload: IUpdateTutorPayload) => {
+const updateTutor = async (id: string, payload: any) => {
     const isTutorExist = await prisma.tutor.findUnique({
-        where: { id }
+        where: { id },
+        include: { user: true }
     });
 
     if (!isTutorExist) {
         throw new AppError(status.NOT_FOUND, "Tutor not found");
     }
 
-    await prisma.tutor.update({
-        where: { id },
-        data: payload,
+    const { name, ...tutorData } = payload;
+
+    await prisma.$transaction(async (tx) => {
+        // Update tutor fields
+        if (Object.keys(tutorData).length > 0) {
+            await tx.tutor.update({
+                where: { id },
+                data: tutorData,
+            });
+        }
+
+        // Update user fields (like name)
+        if (name) {
+            await tx.user.update({
+                where: { id: isTutorExist.userId },
+                data: { name },
+            });
+        }
     });
 
     return await getTutorById(id);

@@ -6,7 +6,7 @@ import { sendResponse } from "../../shared/sendResponse";
 import { TutorScheduleService } from "./tutorSchedule.service";
 
 const createTutorSchedules = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
-    const userId = req.user?.id as string;
+    const userId = req.user?.userId as string;
     const result = await TutorScheduleService.createTutorSchedules(userId, req.body);
 
     sendResponse(res, {
@@ -18,7 +18,7 @@ const createTutorSchedules = catchAsync(async (req: Request & { user?: IRequestU
 });
 
 const getMySchedules = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
-    const userId = req.user?.id as string;
+    const userId = req.user?.userId as string;
     const result = await TutorScheduleService.getMySchedules(userId, req.query);
 
     sendResponse(res, {
@@ -30,7 +30,7 @@ const getMySchedules = catchAsync(async (req: Request & { user?: IRequestUser },
 });
 
 const deleteTutorSchedule = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
-    const userId = req.user?.id as string;
+    const userId = req.user?.userId as string;
     const { id: scheduleId } = req.params;
     const result = await TutorScheduleService.deleteTutorSchedule(userId, scheduleId);
 

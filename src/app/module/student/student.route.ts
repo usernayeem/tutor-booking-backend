@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Role } from "../../../generated/prisma/client";
+import { multerUpload } from "../../config/multer.config";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { StudentController } from "./student.controller";
@@ -17,8 +18,10 @@ router.get("/:id",
     StudentController.getStudentById
 );
 
+// Supports optional profile photo upload via multipart/form-data
 router.patch("/:id",
     checkAuth(Role.STUDENT, Role.ADMIN, Role.SUPER_ADMIN),
+    multerUpload.single("file"),
     validateRequest(updateStudentZodSchema),
     StudentController.updateStudent
 );
@@ -29,3 +32,4 @@ router.delete("/:id",
 );
 
 export const StudentRoutes = router;
+

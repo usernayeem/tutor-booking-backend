@@ -30,7 +30,11 @@ const getTutorById = catchAsync(async (req: Request, res: Response) => {
 
 const updateTutor = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await TutorService.updateTutor(id, req.body);
+    const payload = {
+        ...req.body,
+        ...(req.file?.path ? { profilePhoto: req.file.path } : {}),
+    };
+    const result = await TutorService.updateTutor(id, payload);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

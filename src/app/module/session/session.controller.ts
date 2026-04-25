@@ -5,15 +5,23 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { SessionService } from "./session.service";
 
+import { PaymentService } from "../payment/payment.service";
+
 const createSession = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const user = req.user as IRequestUser;
     const result = await SessionService.createSession(user, req.body);
 
+    // Automatically trigger payment link creation
+    const paymentResult = await PaymentService.createCheckoutSession(result.session.id, user);
+
     sendResponse(res, {
         httpStatusCode: status.CREATED,
         success: true,
-        message: "Session booked successfully",
-        data: result,
+        message: "Session booked successfully. Redirecting to payment...",
+        data: {
+            ...result,
+            paymentUrl: paymentResult.url
+        },
     });
 });
 

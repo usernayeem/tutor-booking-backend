@@ -32,7 +32,10 @@ const getStudentById = catchAsync(async (req: Request, res: Response) => {
 
 const updateStudent = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const payload = req.body;
+    const payload = {
+        ...req.body,
+        ...(req.file?.path ? { profilePhoto: req.file.path } : {}),
+    };
     const updatedStudent = await StudentService.updateStudent(id as string, payload);
 
     sendResponse(res, {

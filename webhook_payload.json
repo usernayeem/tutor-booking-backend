@@ -1,0 +1,11 @@
+{
+  "type": "checkout.session.completed",
+  "data": {
+    "object": {
+      "metadata": {
+        "sessionId": "540f9679-c28b-479d-b701-c0e9565303d2",
+        "transactionId": "TXN-820d9c3d-0018-4a08-bac6-3cf9895ffe07"
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ import crypto from "crypto";
 
 const createSession = async (user: IRequestUser, payload: ICreateSessionPayload) => {
     const student = await prisma.student.findUnique({
-        where: { userId: user.id }
+        where: { userId: user.userId }
     });
 
     if (!student) {
@@ -52,7 +52,7 @@ const createSession = async (user: IRequestUser, payload: ICreateSessionPayload)
                 studentId: student.id,
                 tutorId,
                 scheduleId,
-                status: SessionStatus.SCHEDULED,
+                status: SessionStatus.PENDING,
                 paymentStatus: PaymentStatus.UNPAID,
             }
         });
@@ -78,10 +78,10 @@ const getAllSessions = async (user: IRequestUser, query: IQueryParams) => {
     const conditions: Prisma.SessionWhereInput[] = [];
 
     if (user.role === Role.STUDENT) {
-        const student = await prisma.student.findUnique({ where: { userId: user.id } });
+        const student = await prisma.student.findUnique({ where: { userId: user.userId } });
         if (student) conditions.push({ studentId: student.id });
     } else if (user.role === Role.TUTOR) {
-        const tutor = await prisma.tutor.findUnique({ where: { userId: user.id } });
+        const tutor = await prisma.tutor.findUnique({ where: { userId: user.userId } });
         if (tutor) conditions.push({ tutorId: tutor.id });
     }
 
@@ -129,10 +129,10 @@ const getSessionById = async (id: string, user: IRequestUser) => {
     }
 
     // Role verification logic
-    if (user.role === Role.STUDENT && session.student.userId !== user.id) {
+    if (user.role === Role.STUDENT && session.student.userId !== user.userId) {
         throw new AppError(status.FORBIDDEN, "Access Denied: You do not own this session.");
     }
-    if (user.role === Role.TUTOR && session.tutor.userId !== user.id) {
+    if (user.role === Role.TUTOR && session.tutor.userId !== user.userId) {
         throw new AppError(status.FORBIDDEN, "Access Denied: You are not the tutor for this session.");
     }
 
@@ -149,7 +149,7 @@ const updateSessionStatus = async (id: string, payload: IUpdateSessionStatusPayl
         throw new AppError(status.NOT_FOUND, "Session not found");
     }
 
-    if (user.role === Role.TUTOR && session.tutor.userId !== user.id) {
+    if (user.role === Role.TUTOR && session.tutor.userId !== user.userId) {
         throw new AppError(status.FORBIDDEN, "You can only update your own sessions.");
     }
 
