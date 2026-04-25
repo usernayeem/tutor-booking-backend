@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
-import { SessionService } from "./session.service";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
+import { SessionService } from "./session.service.js";
 
-import { PaymentService } from "../payment/payment.service";
+import { PaymentService } from "../payment/payment.service.js";
 
 const createSession = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const user = req.user as IRequestUser;
@@ -27,7 +27,7 @@ const createSession = catchAsync(async (req: Request & { user?: IRequestUser }, 
 
 const getAllSessions = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const user = req.user as IRequestUser;
-    const result = await SessionService.getAllSessions(user, req.query);
+    const result = await SessionService.getAllSessions(user, req.query as unknown as any);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -41,7 +41,7 @@ const getAllSessions = catchAsync(async (req: Request & { user?: IRequestUser },
 const getSessionById = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const user = req.user as IRequestUser;
     const { id } = req.params;
-    const result = await SessionService.getSessionById(id, user);
+    const result = await SessionService.getSessionById(id as string, user);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -54,7 +54,7 @@ const getSessionById = catchAsync(async (req: Request & { user?: IRequestUser },
 const updateSessionStatus = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const user = req.user as IRequestUser;
     const { id } = req.params;
-    const result = await SessionService.updateSessionStatus(id, req.body, user);
+    const result = await SessionService.updateSessionStatus(id as string, req.body, user);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

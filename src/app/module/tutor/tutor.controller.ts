@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
-import { TutorService } from "./tutor.service";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
+import { TutorService } from "./tutor.service.js";
 
 const getAllTutors = catchAsync(async (req: Request, res: Response) => {
-    const result = await TutorService.getAllTutors(req.query);
+    const result = await TutorService.getAllTutors(req.query as unknown as any);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -18,7 +18,7 @@ const getAllTutors = catchAsync(async (req: Request, res: Response) => {
 
 const getTutorById = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await TutorService.getTutorById(id);
+    const result = await TutorService.getTutorById(id as string);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -34,7 +34,7 @@ const updateTutor = catchAsync(async (req: Request, res: Response) => {
         ...req.body,
         ...(req.file?.path ? { profilePhoto: req.file.path } : {}),
     };
-    const result = await TutorService.updateTutor(id, payload);
+    const result = await TutorService.updateTutor(id as string, payload);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -46,7 +46,7 @@ const updateTutor = catchAsync(async (req: Request, res: Response) => {
 
 const deleteTutor = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await TutorService.deleteTutor(id);
+    const result = await TutorService.deleteTutor(id as string);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

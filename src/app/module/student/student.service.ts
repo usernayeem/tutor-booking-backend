@@ -1,12 +1,11 @@
 import status from "http-status";
-import { Prisma, Student } from "../../../generated/prisma/client";
-import { UserStatus } from "../../../generated/prisma/client";
-import AppError from "../../errorHelpers/AppError";
-import { IQueryParams } from "../../interfaces/query.interface";
-import { prisma } from "../../lib/prisma";
-import { QueryBuilder } from "../../utils/QueryBuilder";
-import { studentFilterableFields, studentIncludeConfig, studentSearchableFields } from "./student.constant";
-import { IUpdateStudentPayload } from "./student.interface";
+import { UserStatus, Prisma, Student } from '@prisma/client';
+import AppError from "../../errorHelpers/AppError.js";
+import { IQueryParams } from "../../interfaces/query.interface.js";
+import { prisma } from "../../lib/prisma.js";
+import { QueryBuilder } from "../../utils/QueryBuilder.js";
+import { studentFilterableFields, studentIncludeConfig, studentSearchableFields } from "./student.constant.js";
+import { IUpdateStudentPayload } from "./student.interface.js";
 
 const getAllStudents = async (query: IQueryParams) => {
     const queryBuilder = new QueryBuilder<Student, Prisma.StudentWhereInput, Prisma.StudentInclude>(

@@ -1,7 +1,8 @@
+import PrismaPkg from '@prisma/client';
 import { Router } from "express";
-import { Role } from "../../../generated/prisma/client";
-import { checkAuth } from "../../middleware/checkAuth";
-import { PaymentController } from "./payment.controller";
+const { Role } = PrismaPkg;
+import { checkAuth } from "../../middleware/checkAuth.js";
+import { PaymentController } from "./payment.controller.js";
 
 const router = Router();
 

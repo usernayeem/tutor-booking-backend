@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
-import { ReviewService } from "./review.service";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
+import { ReviewService } from "./review.service.js";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
 
 const createReview = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const result = await ReviewService.createReview(req.user!, req.body);
@@ -18,7 +18,7 @@ const createReview = catchAsync(async (req: Request & { user?: IRequestUser }, r
 
 const getTutorReviews = catchAsync(async (req: Request, res: Response) => {
     const { tutorId } = req.params;
-    const result = await ReviewService.getTutorReviews(tutorId);
+    const result = await ReviewService.getTutorReviews(tutorId as string);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

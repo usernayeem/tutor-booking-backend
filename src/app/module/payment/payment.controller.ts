@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
-import { PaymentService } from "./payment.service";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
+import { PaymentService } from "./payment.service.js";
 
 const createCheckoutSession = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const user = req.user as IRequestUser;
@@ -18,7 +18,7 @@ const createCheckoutSession = catchAsync(async (req: Request & { user?: IRequest
         return;
     }
 
-    const result = await PaymentService.createCheckoutSession(sessionId, user);
+    const result = await PaymentService.createCheckoutSession(sessionId as string, user);
 
     sendResponse(res, {
         httpStatusCode: status.CREATED,
@@ -40,7 +40,7 @@ const getPaymentBySessionId = catchAsync(async (req: Request & { user?: IRequest
     const user = req.user as IRequestUser;
     const { id: sessionId } = req.params;
     
-    const result = await PaymentService.getPaymentBySessionId(sessionId, user);
+    const result = await PaymentService.getPaymentBySessionId(sessionId as string, user);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

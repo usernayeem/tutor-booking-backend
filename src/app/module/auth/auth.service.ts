@@ -1,14 +1,14 @@
 import status from "http-status";
+import { UserStatus } from '@prisma/client';
 import { JwtPayload } from "jsonwebtoken";
-import { UserStatus } from "../../../generated/prisma/client";
-import { envVars } from "../../config/env";
-import AppError from "../../errorHelpers/AppError";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { auth } from "../../lib/auth";
-import { prisma } from "../../lib/prisma";
-import { jwtUtils } from "../../utils/jwt";
-import { tokenUtils } from "../../utils/token";
-import { IChangePasswordPayload, ILoginUserPayload, IRegisterStudentPayload } from "./auth.interface";
+import { envVars } from "../../config/env.js";
+import AppError from "../../errorHelpers/AppError.js";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
+import { auth } from "../../lib/auth.js";
+import { prisma } from "../../lib/prisma.js";
+import { jwtUtils } from "../../utils/jwt.js";
+import { tokenUtils } from "../../utils/token.js";
+import { IChangePasswordPayload, ILoginUserPayload, IRegisterStudentPayload } from "./auth.interface.js";
 
 const registerStudent = async (payload: IRegisterStudentPayload) => {
     const { name, email, password } = payload;

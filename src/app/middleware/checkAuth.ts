@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
 import status from "http-status";
-import { Role, UserStatus } from "../../generated/prisma/client";
-import { envVars } from "../config/env";
-import AppError from "../errorHelpers/AppError";
-import { prisma } from "../lib/prisma";
-import { CookieUtils } from "../utils/cookie";
-import { jwtUtils } from "../utils/jwt";
+import { UserStatus, Role } from '@prisma/client';
+import { envVars } from "../config/env.js";
+import AppError from "../errorHelpers/AppError.js";
+import { prisma } from "../lib/prisma.js";
+import { CookieUtils } from "../utils/cookie.js";
+import { jwtUtils } from "../utils/jwt.js";
 
 export const checkAuth = (...authRoles: Role[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -53,15 +53,16 @@ export const checkAuth = (...authRoles: Role[]) => async (req: Request, res: Res
                     throw new AppError(status.UNAUTHORIZED, 'Unauthorized access! User is deleted.');
                 }
 
-                if (authRoles.length > 0 && !authRoles.includes(user.role)) {
+                if (authRoles.length > 0 && !authRoles.includes(user.role as Role)) {
                     throw new AppError(status.FORBIDDEN, 'Forbidden access! You do not have permission to access this resource.');
                 }
 
                 req.user = {
-                    userId : user.id,
-                    role : user.role,
-                    email : user.email,
-                }
+                    id: user.id,
+                    userId: user.id,
+                    role: user.role as Role,
+                    email: user.email,
+                };
                 
                 return next();
             }
@@ -85,10 +86,11 @@ export const checkAuth = (...authRoles: Role[]) => async (req: Request, res: Res
         }
         
         req.user = {
-            userId : verifiedToken.data!.userId,
-            role : verifiedToken.data!.role,
-            email : verifiedToken.data!.email,
-        }
+            id: verifiedToken.data!.userId,
+            userId: verifiedToken.data!.userId,
+            role: verifiedToken.data!.role as Role,
+            email: verifiedToken.data!.email,
+        };
 
         next();
     } catch (error: any) {

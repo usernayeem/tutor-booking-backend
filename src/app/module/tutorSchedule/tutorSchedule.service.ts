@@ -1,8 +1,8 @@
 import status from "http-status";
-import AppError from "../../errorHelpers/AppError";
-import { IQueryParams } from "../../interfaces/query.interface";
-import { prisma } from "../../lib/prisma";
-import { ICreateTutorSchedulePayload } from "./tutorSchedule.interface";
+import AppError from "../../errorHelpers/AppError.js";
+import { IQueryParams } from "../../interfaces/query.interface.js";
+import { prisma } from "../../lib/prisma.js";
+import { ICreateTutorSchedulePayload } from "./tutorSchedule.interface.js";
 
 const createTutorSchedules = async (userId: string, payload: ICreateTutorSchedulePayload) => {
     // Check if the tutor exists

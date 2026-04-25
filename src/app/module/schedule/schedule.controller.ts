@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
-import { ScheduleService } from "./schedule.service";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
+import { ScheduleService } from "./schedule.service.js";
 
 const createSchedules = catchAsync(async (req: Request, res: Response) => {
     const result = await ScheduleService.createSchedules(req.body);
@@ -16,7 +16,7 @@ const createSchedules = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllSchedules = catchAsync(async (req: Request, res: Response) => {
-    const result = await ScheduleService.getAllSchedules(req.query);
+    const result = await ScheduleService.getAllSchedules(req.query as unknown as any);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -29,7 +29,7 @@ const getAllSchedules = catchAsync(async (req: Request, res: Response) => {
 
 const deleteSchedule = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await ScheduleService.deleteSchedule(id);
+    const result = await ScheduleService.deleteSchedule(id as string);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

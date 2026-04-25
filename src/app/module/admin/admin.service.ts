@@ -1,10 +1,11 @@
 import status from "http-status";
-import { prisma } from "../../lib/prisma";
-import AppError from "../../errorHelpers/AppError";
-import { QueryBuilder } from "../../utils/QueryBuilder";
-import { Prisma, User } from "../../../generated/prisma/client";
-import { IQueryParams } from "../../interfaces/query.interface";
-import { PaymentStatus, UserStatus } from "../../../generated/prisma/client";
+import { Role, UserStatus, Prisma, User, PaymentStatus } from '@prisma/client';
+import { prisma } from "../../lib/prisma.js";
+import AppError from "../../errorHelpers/AppError.js";
+import { QueryBuilder } from "../../utils/QueryBuilder.js";
+import { IQueryParams } from "../../interfaces/query.interface.js";
+
+
 
 const getDashboardStats = async () => {
     const totalStudents = await prisma.student.count();

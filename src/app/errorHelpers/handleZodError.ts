@@ -1,6 +1,6 @@
 import status from "http-status";
 import z from "zod";
-import { TErrorResponse, TErrorSources } from "../interfaces/error.interface";
+import { TErrorResponse, TErrorSources } from "../interfaces/error.interface.js";
 
 // Transforms a ZodError into a consistent TErrorResponse shape.
 // Each Zod issue becomes one entry in errorSources with its field path and message.

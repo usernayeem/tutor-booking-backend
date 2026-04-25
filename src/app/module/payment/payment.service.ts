@@ -1,13 +1,10 @@
 import status from "http-status";
-import { Prisma, Payment } from "../../../generated/prisma/client";
-import { PaymentStatus, SessionStatus } from "../../../generated/prisma/client";
-import { envVars } from "../../config/env";
-import { stripe } from "../../config/stripe.config";
-import AppError from "../../errorHelpers/AppError";
-import { IQueryParams } from "../../interfaces/query.interface";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { prisma } from "../../lib/prisma";
-import { QueryBuilder } from "../../utils/QueryBuilder";
+import { PaymentStatus, SessionStatus, Prisma, Payment } from '@prisma/client';
+import { envVars } from "../../config/env.js";
+import { stripe } from "../../config/stripe.config.js";
+import AppError from "../../errorHelpers/AppError.js";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
+import { prisma } from "../../lib/prisma.js";
 
 const createCheckoutSession = async (sessionId: string, user: IRequestUser) => {
     // 1. Verify session belongs to the user
@@ -59,8 +56,8 @@ const createCheckoutSession = async (sessionId: string, user: IRequestUser) => {
             transactionId: sessionDetail.payment.transactionId,
             sessionId: sessionDetail.id,
         },
-        success_url: `${envVars.CLIENT_URL || "http://localhost:3000"}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${envVars.CLIENT_URL || "http://localhost:3000"}/payment/cancel`,
+        success_url: `${envVars.FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${envVars.FRONTEND_URL}/payment/cancel`,
     });
 
     return { url: stripeSession.url };

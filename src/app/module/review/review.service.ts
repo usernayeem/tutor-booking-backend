@@ -1,8 +1,8 @@
 import status from "http-status";
-import { prisma } from "../../lib/prisma";
-import AppError from "../../errorHelpers/AppError";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { SessionStatus } from "../../../generated/prisma/client";
+import { SessionStatus } from '@prisma/client';
+import { prisma } from "../../lib/prisma.js";
+import AppError from "../../errorHelpers/AppError.js";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
 
 const createReview = async (user: IRequestUser, payload: { sessionId: string; rating: number; comment?: string }) => {
     // 1. Get student profile

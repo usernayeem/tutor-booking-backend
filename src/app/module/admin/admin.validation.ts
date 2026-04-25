@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { UserStatus } from "../../../generated/prisma/client";
+import PrismaPkg from '@prisma/client';
+import { z } from "zod"; const { UserStatus } = PrismaPkg;
 
 const updateUserStatusZodSchema = z.object({
     status: z.nativeEnum(UserStatus),

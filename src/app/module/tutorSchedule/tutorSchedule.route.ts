@@ -1,9 +1,10 @@
+import PrismaPkg from '@prisma/client';
 import { Router } from "express";
-import { Role } from "../../../generated/prisma/client";
-import { checkAuth } from "../../middleware/checkAuth";
-import { validateRequest } from "../../middleware/validateRequest";
-import { TutorScheduleController } from "./tutorSchedule.controller";
-import { TutorScheduleValidation } from "./tutorSchedule.validation";
+const { Role } = PrismaPkg;
+import { checkAuth } from "../../middleware/checkAuth.js";
+import { validateRequest } from "../../middleware/validateRequest.js";
+import { TutorScheduleController } from "./tutorSchedule.controller.js";
+import { TutorScheduleValidation } from "./tutorSchedule.validation.js";
 
 const router = Router();
 

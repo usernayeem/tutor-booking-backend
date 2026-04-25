@@ -1,10 +1,10 @@
 import status from "http-status";
-import { Prisma, Schedule } from "../../../generated/prisma/client";
-import AppError from "../../errorHelpers/AppError";
-import { IQueryParams } from "../../interfaces/query.interface";
-import { prisma } from "../../lib/prisma";
-import { QueryBuilder } from "../../utils/QueryBuilder";
-import { ICreateSchedulePayload, scheduleSearchableFields } from "./schedule.interface";
+import { Prisma, Schedule } from '@prisma/client';
+import AppError from "../../errorHelpers/AppError.js";
+import { IQueryParams } from "../../interfaces/query.interface.js";
+import { prisma } from "../../lib/prisma.js";
+import { QueryBuilder } from "../../utils/QueryBuilder.js";
+import { ICreateSchedulePayload, scheduleSearchableFields } from "./schedule.interface.js";
 
 const createSchedules = async (payload: ICreateSchedulePayload) => {
     // Basic slot creation logic for 30 minute buffers

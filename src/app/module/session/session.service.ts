@@ -1,12 +1,11 @@
 import status from "http-status";
-import { Prisma, Session } from "../../../generated/prisma/client";
-import { PaymentStatus, Role, SessionStatus } from "../../../generated/prisma/client";
-import AppError from "../../errorHelpers/AppError";
-import { IQueryParams } from "../../interfaces/query.interface";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { prisma } from "../../lib/prisma";
-import { QueryBuilder } from "../../utils/QueryBuilder";
-import { ICreateSessionPayload, IUpdateSessionStatusPayload, sessionFilterableFields, sessionSearchableFields } from "./session.interface";
+import { PaymentStatus, Role, SessionStatus, Prisma, Session } from '@prisma/client';
+import AppError from "../../errorHelpers/AppError.js";
+import { IQueryParams } from "../../interfaces/query.interface.js";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
+import { prisma } from "../../lib/prisma.js";
+import { QueryBuilder } from "../../utils/QueryBuilder.js";
+import { ICreateSessionPayload, IUpdateSessionStatusPayload, sessionFilterableFields, sessionSearchableFields } from "./session.interface.js";
 import crypto from "crypto";
 
 const createSession = async (user: IRequestUser, payload: ICreateSessionPayload) => {

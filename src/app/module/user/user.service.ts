@@ -1,9 +1,9 @@
 import status from "http-status";
-import { Role } from "../../../generated/prisma/client";
-import AppError from "../../errorHelpers/AppError";
-import { auth } from "../../lib/auth";
-import { prisma } from "../../lib/prisma";
-import { ICreateAdminPayload, ICreateTutorPayload } from "./user.interface";
+import { Role } from '@prisma/client';
+import AppError from "../../errorHelpers/AppError.js";
+import { auth } from "../../lib/auth.js";
+import { prisma } from "../../lib/prisma.js";
+import { ICreateAdminPayload, ICreateTutorPayload } from "./user.interface.js";
 
 const createTutor = async (payload: ICreateTutorPayload) => {
     // 1. Verify subjects exist

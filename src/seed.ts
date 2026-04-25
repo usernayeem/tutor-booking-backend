@@ -1,5 +1,5 @@
-import { seedSuperAdmin } from "./app/utils/seed";
-import { prisma } from "./app/lib/prisma";
+import { seedSuperAdmin } from "./app/utils/seed.js";
+import { prisma } from "./app/lib/prisma.js";
 
 const runSeed = async () => {
     console.log("Starting seed process...");

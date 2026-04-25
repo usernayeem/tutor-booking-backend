@@ -1,7 +1,7 @@
-import z from "zod";
+import { z } from "zod";
 
 export const createSubjectZodSchema = z.object({
-    name: z.string({ required_error: "Subject name is required" }),
+    name: z.string().min(1, "Subject name is required"),
     description: z.string().optional(),
     iconUrl: z.string().optional(),
 });

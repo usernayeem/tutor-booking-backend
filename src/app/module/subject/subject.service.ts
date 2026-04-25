@@ -1,5 +1,6 @@
-import { Subject } from "../../../generated/prisma/client";
-import { prisma } from "../../lib/prisma";
+import PrismaPkg from '@prisma/client';
+import type { Subject } from '@prisma/client';
+import { prisma } from "../../lib/prisma.js";
 
 const createSubject = async (payload: Subject): Promise<Subject> => {
     const subject = await prisma.subject.create({

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { catchAsync } from "../../shared/catchAsync";
-import { sendResponse } from "../../shared/sendResponse";
-import { TutorScheduleService } from "./tutorSchedule.service";
+import { IRequestUser } from "../../interfaces/requestUser.interface.js";
+import { catchAsync } from "../../shared/catchAsync.js";
+import { sendResponse } from "../../shared/sendResponse.js";
+import { TutorScheduleService } from "./tutorSchedule.service.js";
 
 const createTutorSchedules = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const userId = req.user?.userId as string;
@@ -19,7 +19,7 @@ const createTutorSchedules = catchAsync(async (req: Request & { user?: IRequestU
 
 const getMySchedules = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const userId = req.user?.userId as string;
-    const result = await TutorScheduleService.getMySchedules(userId, req.query);
+    const result = await TutorScheduleService.getMySchedules(userId, req.query as any);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -32,7 +32,7 @@ const getMySchedules = catchAsync(async (req: Request & { user?: IRequestUser },
 const deleteTutorSchedule = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const userId = req.user?.userId as string;
     const { id: scheduleId } = req.params;
-    const result = await TutorScheduleService.deleteTutorSchedule(userId, scheduleId);
+    const result = await TutorScheduleService.deleteTutorSchedule(userId, scheduleId as string);
 
     sendResponse(res, {
         httpStatusCode: status.OK,

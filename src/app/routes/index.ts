@@ -1,15 +1,15 @@
 import express from "express";
-import { AuthRoutes } from "../module/auth/auth.route";
-import { StudentRoutes } from "../module/student/student.route";
-import { SubjectRoutes } from "../module/subject/subject.route";
-import { UserRoutes } from "../module/user/user.route";
-import { PaymentRoutes } from "../module/payment/payment.route";
-import { ScheduleRoutes } from "../module/schedule/schedule.route";
-import { SessionRoutes } from "../module/session/session.route";
-import { TutorRoutes } from "../module/tutor/tutor.route";
-import { TutorScheduleRoutes } from "../module/tutorSchedule/tutorSchedule.route";
-import { ReviewRoutes } from "../module/review/review.route";
-import { AdminRoutes } from "../module/admin/admin.route";
+import { AuthRoutes } from "../module/auth/auth.route.js";
+import { StudentRoutes } from "../module/student/student.route.js";
+import { SubjectRoutes } from "../module/subject/subject.route.js";
+import { UserRoutes } from "../module/user/user.route.js";
+import { PaymentRoutes } from "../module/payment/payment.route.js";
+import { ScheduleRoutes } from "../module/schedule/schedule.route.js";
+import { SessionRoutes } from "../module/session/session.route.js";
+import { TutorRoutes } from "../module/tutor/tutor.route.js";
+import { TutorScheduleRoutes } from "../module/tutorSchedule/tutorSchedule.route.js";
+import { ReviewRoutes } from "../module/review/review.route.js";
+import { AdminRoutes } from "../module/admin/admin.route.js";
 
 const router = express.Router();
 

@@ -1,12 +1,10 @@
 import status from "http-status";
-import { Prisma, Tutor } from "../../../generated/prisma/client";
-import { UserStatus } from "../../../generated/prisma/client";
-import AppError from "../../errorHelpers/AppError";
-import { IQueryParams } from "../../interfaces/query.interface";
-import { prisma } from "../../lib/prisma";
-import { QueryBuilder } from "../../utils/QueryBuilder";
-import { tutorFilterableFields, tutorIncludeConfig, tutorSearchableFields } from "./tutor.constant";
-import { IUpdateTutorPayload } from "./tutor.interface";
+import { UserStatus, Prisma, Tutor } from '@prisma/client';
+import AppError from "../../errorHelpers/AppError.js";
+import { IQueryParams } from "../../interfaces/query.interface.js";
+import { prisma } from "../../lib/prisma.js";
+import { QueryBuilder } from "../../utils/QueryBuilder.js";
+import { tutorFilterableFields, tutorIncludeConfig, tutorSearchableFields } from "./tutor.constant.js";
 
 const getAllTutors = async (query: IQueryParams) => {
     // If the client passes "subject" in the query to drill down by subject name/id

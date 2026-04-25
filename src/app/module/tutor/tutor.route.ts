@@ -1,10 +1,11 @@
+import PrismaPkg from '@prisma/client';
 import { Router } from "express";
-import { Role } from "../../../generated/prisma/client";
-import { multerUpload } from "../../config/multer.config";
-import { checkAuth } from "../../middleware/checkAuth";
-import { validateRequest } from "../../middleware/validateRequest";
-import { TutorController } from "./tutor.controller";
-import { TutorValidation } from "./tutor.validation";
+const { Role } = PrismaPkg;
+import { multerUpload } from "../../config/multer.config.js";
+import { checkAuth } from "../../middleware/checkAuth.js";
+import { validateRequest } from "../../middleware/validateRequest.js";
+import { TutorController } from "./tutor.controller.js";
+import { TutorValidation } from "./tutor.validation.js";
 
 const router = Router();
 

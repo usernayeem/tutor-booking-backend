@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import z from "zod";
+import { z } from "zod";
 
 // Validates incoming request body against a Zod schema
-export const validateRequest = (zodSchema: z.ZodObject<any> | z.ZodEffects<any>) => {
+export const validateRequest = (zodSchema: z.ZodTypeAny) => {
     return (req: Request, res: Response, next: NextFunction) => {
         // Handle form-data where JSON happens to be stringified inside a 'data' field
         if (req.body.data) {

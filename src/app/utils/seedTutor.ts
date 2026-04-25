@@ -1,6 +1,7 @@
-import { Role } from "../../generated/prisma/client";
-import { auth } from "../lib/auth";
-import { prisma } from "../lib/prisma";
+import PrismaPkg from '@prisma/client';
+const { Role } = PrismaPkg;
+import { auth } from "../lib/auth.js";
+import { prisma } from "../lib/prisma.js";
 
 export const seedTutor = async () => {
     try {
