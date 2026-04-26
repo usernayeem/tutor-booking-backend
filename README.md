@@ -1,51 +1,66 @@
 # Tutor Booking Platform — Backend 🚀
 
-This is the backend application for the Tutor Booking Platform, built following strict, scalable, modular industry architecture guidelines.
+Professional, scalable, and secure backend API for the Tutor Booking Platform.
 
-## Tech Stack
+## 🔗 Live URLs
+- **API Base URL**: [https://tutor-booking-backend.vercel.app](https://tutor-booking-backend.vercel.app )
+- **Frontend App**: [https://tutor-booking-frontend.vercel.app](https://tutor-booking-frontend.vercel.app)
 
-- **Node.js + Express** (Core Server Framework)
-- **TypeScript** (Robust Static Typing)
-- **Prisma ORM + PostgreSQL** (High performance DB interaction)
-- **Better-Auth** (State-of-the-art authentication package)
-- **Stripe** (Secure Payment Gateway)
-- **Cloudinary / Multer** (Efficient Media/Image Management)
-- **Zod** (Declarative validation)
+## 📝 Project Description
+This backend application serves as the core engine for the Tutor Booking Platform. It manages user authentication, role-based access control (RBAC), session scheduling, payments through Stripe, and media storage via Cloudinary. The architecture is modular and follows industry best practices for scalability and maintainability.
 
-## Setup & Running Locally
+## ✨ Features
+- **Robust Authentication**: Multi-strategy auth (Email/Password, Google OAuth) powered by Better-Auth.
+- **RBAC (Role-Based Access Control)**: Granular permissions for Students, Tutors, and Admins.
+- **Session Management**: Native scheduling for tutoring sessions with slot availability.
+- **Payment Integration**: Secure transaction processing via Stripe.
+- **Media Management**: Efficient image and document storage using Cloudinary.
+- **Admin Dashboard**: Comprehensive stats and user management for platform administrators.
+- **Automated Seeding**: Auto-creates a Super Admin on first boot.
+- **Smart Querying**: Custom `QueryBuilder` for simplified filtering, sorting, and pagination.
 
-1. **Install Dependencies**
+## 🛠️ Technologies Used
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Language**: TypeScript
+- **Database**: PostgreSQL (via Neon)
+- **ORM**: Prisma
+- **Auth**: Better-Auth
+- **Payments**: Stripe
+- **Storage**: Cloudinary
+- **Validation**: Zod
+- **Email**: Nodemailer (Gmail SMTP)
 
-   ```bash
-   npm install
-   ```
-
-2. **Environment Configuration**
-   Duplicate `.env.example`, rename it to `.env`, and populate it with your active secrets (Database string, Stripe keys, SMTP details, etc.).
-
-3. **Apply Database Schema**
-
-   ```bash
-   npm run migrate
-   ```
-
-4. **Boot Development Server**
-   ```bash
-   npm run dev
-   ```
-   _Note: Upon startup, the backend invokes `src/server.ts` which automatically seeds a completely verified `SUPER_ADMIN` user directly into your database if one is not detected!_
-
-## Implemented Modules
-
-| Module Name          | Responsibility                                         | Status                   |
-| -------------------- | ------------------------------------------------------ | ------------------------ |
-| **Auth**             | Registration, Login, OAuth, OTP emails, Password reset | ✅ Completely configured |
-| **Admin**            | Dashboard aggregation stats, RBAC user blocking        | ✅ Completely configured |
-| **User & Roles**     | Dynamic mapping for Student, Tutor, and Admins         | ✅ Completely configured |
-| **Session Booking**  | Requesting schedule slots natively                     | ✅ Completely configured |
-| **Payment (Stripe)** | Processing payments before session finalizing          | ✅ Completely configured |
-| **Review**           | Post-session tutor review system                       | ✅ Completely configured |
-
-## Important Development Details
-
-This application implements a custom **`QueryBuilder`** utility class that natively chains search queries, strict filtering fields, nested inclusions, and pagination directly over the active Prisma instance reducing boilerplate down to just two lines of code internally!
+## ⚙️ Setup Instructions
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd tutor-booking-backend
+    ```
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Environment Setup**:
+    Create a `.env` file in the root directory and add the following:
+    ```env
+    DATABASE_URL="your-postgresql-url"
+    BETTER_AUTH_SECRET="your-secret"
+    BETTER_AUTH_URL="your-backend-url/api/auth"
+    STRIPE_SECRET_KEY="your-stripe-key"
+    CLOUDINARY_CLOUD_NAME="your-cloud-name"
+    # ... other keys as per .env.example
+    ```
+4.  **Database Migration**:
+    ```bash
+    npm run migrate
+    ```
+5.  **Run in Development**:
+    ```bash
+    npm run dev
+    ```
+6.  **Build for Production**:
+    ```bash
+    npm run build
+    npm start
+    ```
