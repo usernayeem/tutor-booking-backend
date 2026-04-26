@@ -36,6 +36,27 @@ const handleWebhook = catchAsync(async (req: Request, res: Response) => {
     res.status(200).json({ received: true });
 });
 
+const verifyPayment = catchAsync(async (req: Request, res: Response) => {
+    const { stripeSessionId } = req.body;
+    
+    if (!stripeSessionId) {
+        res.status(status.BAD_REQUEST).json({
+            success: false,
+            message: "stripeSessionId is required",
+        });
+        return;
+    }
+
+    const result = await PaymentService.verifyPayment(stripeSessionId);
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: result.success,
+        message: result.message,
+        data: result,
+    });
+});
+
 const getPaymentBySessionId = catchAsync(async (req: Request & { user?: IRequestUser }, res: Response) => {
     const user = req.user as IRequestUser;
     const { id: sessionId } = req.params;
@@ -53,5 +74,6 @@ const getPaymentBySessionId = catchAsync(async (req: Request & { user?: IRequest
 export const PaymentController = {
     createCheckoutSession,
     handleWebhook,
+    verifyPayment,
     getPaymentBySessionId,
 };

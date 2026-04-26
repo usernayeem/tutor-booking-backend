@@ -19,6 +19,12 @@ router.post(
     PaymentController.handleWebhook
 );
 
+// Manual verification endpoint (backup for webhook)
+router.post(
+    "/verify-payment",
+    PaymentController.verifyPayment
+);
+
 // Get payment info for a specific session
 router.get(
     "/:id",

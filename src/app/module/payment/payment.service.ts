@@ -97,6 +97,41 @@ const handleWebhook = async (payload: any) => {
     return { received: true };
 };
 
+const verifyPayment = async (stripeSessionId: string) => {
+    // 1. Retrieve the session from Stripe
+    const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+
+    if (session.payment_status === 'paid') {
+        const transactionId = session.metadata?.transactionId;
+
+        if (transactionId) {
+            try {
+                // Update payment status
+                const payment = await prisma.payment.update({
+                    where: { transactionId },
+                    data: { paymentStatus: PaymentStatus.PAID }
+                });
+
+                // Update session payment status and promote to SCHEDULED
+                await prisma.session.update({
+                    where: { id: payment.sessionId },
+                    data: { 
+                        paymentStatus: PaymentStatus.PAID,
+                        status: SessionStatus.SCHEDULED 
+                    }
+                });
+
+                return { success: true, message: "Payment verified and updated" };
+            } catch (error) {
+                // If already updated, just return success
+                return { success: true, message: "Payment already processed" };
+            }
+        }
+    }
+
+    return { success: false, message: "Payment not verified" };
+};
+
 const getPaymentBySessionId = async (sessionId: string, user: IRequestUser) => {
     const payment = await prisma.payment.findUnique({
         where: { sessionId },
@@ -125,5 +160,6 @@ const getPaymentBySessionId = async (sessionId: string, user: IRequestUser) => {
 export const PaymentService = {
     createCheckoutSession,
     handleWebhook,
+    verifyPayment,
     getPaymentBySessionId,
 };
