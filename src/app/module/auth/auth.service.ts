@@ -13,6 +13,7 @@ import { IChangePasswordPayload, ILoginUserPayload, IRegisterStudentPayload } fr
 const registerStudent = async (payload: IRegisterStudentPayload) => {
     const { name, email, password } = payload;
 
+    // 1. Create user in Better-Auth
     const data = await auth.api.signUpEmail({
         body: {
             name,
@@ -26,14 +27,18 @@ const registerStudent = async (payload: IRegisterStudentPayload) => {
     }
 
     try {
-        const student = await prisma.$transaction(async (tx) => {
-            const studentTx = await tx.student.create({
-                data: {
-                    userId: data.user.id,
-                }
-            })
-            return studentTx
-        })
+        // 2. Automatically mark email as verified since we disabled the verification flow
+        await prisma.user.update({
+            where: { id: data.user.id },
+            data: { emailVerified: true }
+        });
+
+        // 3. Create Student profile
+        const student = await prisma.student.create({
+            data: {
+                userId: data.user.id,
+            }
+        });
 
         const accessToken = tokenUtils.getAccessToken({
             userId: data.user.id,
@@ -42,7 +47,7 @@ const registerStudent = async (payload: IRegisterStudentPayload) => {
             email: data.user.email,
             status: data.user.status,
             isDeleted: data.user.isDeleted,
-            emailVerified: data.user.emailVerified,
+            emailVerified: true,
         });
 
         const refreshToken = tokenUtils.getRefreshToken({
@@ -52,7 +57,7 @@ const registerStudent = async (payload: IRegisterStudentPayload) => {
             email: data.user.email,
             status: data.user.status,
             isDeleted: data.user.isDeleted,
-            emailVerified: data.user.emailVerified,
+            emailVerified: true,
         });
 
         return {
@@ -63,16 +68,16 @@ const registerStudent = async (payload: IRegisterStudentPayload) => {
         }
 
     } catch (error) {
-        console.log("Transaction error : ", error);
-        await prisma.user.delete({
-            where: {
-                id: data.user.id
-            }
-        })
+        console.error("Registration error:", error);
+        // Rollback user creation if student profile fails
+        try {
+            await prisma.user.delete({ where: { id: data.user.id } });
+        } catch (e) {
+            console.error("Cleanup failed:", e);
+        }
         throw error;
     }
 }
-
 
 const loginUser = async (payload: ILoginUserPayload) => {
     const { email, password } = payload;
@@ -283,132 +288,6 @@ const logoutUser = async (sessionToken : string) => {
     return result;
 }
 
-const verifyEmail = async (email : string, otp : string) => {
-
-    const result = await auth.api.verifyEmailOTP({
-        body:{
-            email,
-            otp,
-        }
-    })
-
-    if(result.status && !result.user.emailVerified){
-        await prisma.user.update({
-            where : {
-                email,
-            },
-            data : {
-                emailVerified: true,
-            }
-        })
-    }
-}
-
-const forgetPassword = async (email : string) => {
-    const isUserExist = await prisma.user.findUnique({
-        where : {
-            email,
-        }
-    })
-
-    if(!isUserExist){
-        throw new AppError(status.NOT_FOUND, "User not found");
-    }
-
-    if(!isUserExist.emailVerified){
-        throw new AppError(status.BAD_REQUEST, "Email not verified");
-    }
-
-    if(isUserExist.isDeleted || isUserExist.status === UserStatus.DELETED){
-        throw new AppError(status.NOT_FOUND, "User not found"); 
-    }
-
-    await auth.api.requestPasswordResetEmailOTP({
-        body:{
-            email,
-        }
-    })
-}
-
-const resetPassword = async (email : string, otp : string, newPassword : string) => {
-    const isUserExist = await prisma.user.findUnique({
-        where: {
-            email,
-        }
-    })
-
-    if (!isUserExist) {
-        throw new AppError(status.NOT_FOUND, "User not found");
-    }
-
-    if (!isUserExist.emailVerified) {
-        throw new AppError(status.BAD_REQUEST, "Email not verified");
-    }
-
-    if (isUserExist.isDeleted || isUserExist.status === UserStatus.DELETED) {
-        throw new AppError(status.NOT_FOUND, "User not found");
-    }
-
-    await auth.api.resetPasswordEmailOTP({
-        body:{
-            email,
-            otp,
-            password : newPassword,
-        }
-    })
-
-    if (isUserExist.needPasswordChange) {
-        await prisma.user.update({
-            where: {
-                id: isUserExist.id,
-            },
-            data: {
-                needPasswordChange: false,
-            }
-        })
-    }
-
-    await prisma.sessionAuth.deleteMany({
-        where:{
-            userId : isUserExist.id,
-        }
-    })
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const googleLoginSuccess = async (session : Record<string, any>) =>{
-    const isStudentExists = await prisma.student.findUnique({
-        where : {
-            userId : session.user.id,
-        }
-    })
-
-    if(!isStudentExists){
-        await prisma.student.create({
-            data : {
-                userId : session.user.id,
-            }
-        })
-    }
-
-    const accessToken = tokenUtils.getAccessToken({
-        userId: session.user.id,
-        role: session.user.role,
-        name: session.user.name,
-    });
-
-    const refreshToken = tokenUtils.getRefreshToken({
-        userId: session.user.id,
-        role: session.user.role,
-        name: session.user.name,
-    });
-
-    return {
-        accessToken,
-        refreshToken,
-    }
-}
-
 export const AuthService = {
     registerStudent,
     loginUser,
@@ -416,8 +295,4 @@ export const AuthService = {
     getNewToken,
     changePassword,
     logoutUser,
-    verifyEmail,
-    forgetPassword,
-    resetPassword,
-    googleLoginSuccess,
 };

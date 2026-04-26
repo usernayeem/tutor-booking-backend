@@ -1,9 +1,8 @@
 import { Role, UserStatus } from '@prisma/client';
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { bearer, emailOTP } from "better-auth/plugins";
+import { bearer } from "better-auth/plugins";
 import { envVars } from "../config/env.js";
-import { sendEmail } from "../utils/email.js";
 import { prisma } from "./prisma.js";
 
 export const auth = betterAuth({
@@ -15,30 +14,7 @@ export const auth = betterAuth({
 
     emailAndPassword: {
         enabled: true,
-        requireEmailVerification: true,
-    },
-
-    socialProviders:{
-        google:{
-            clientId: envVars.GOOGLE_CLIENT_ID,
-            clientSecret: envVars.GOOGLE_CLIENT_SECRET,
-            mapProfileToUser: ()=>{
-                return {
-                    role: Role.STUDENT,
-                    status: UserStatus.ACTIVE,
-                    needPasswordChange: false,
-                    emailVerified: true,
-                    isDeleted: false,
-                    deletedAt: null,
-                }
-            }
-        }
-    },
-
-    emailVerification:{
-        sendOnSignUp: true,
-        sendOnSignIn: true,
-        autoSignInAfterVerification: true,
+        requireEmailVerification: false,
     },
 
     user: {
@@ -77,50 +53,6 @@ export const auth = betterAuth({
 
     plugins: [
         bearer(),
-        emailOTP({
-            overrideDefaultEmailVerification: true,
-            async sendVerificationOTP({email, otp, type}) {
-                if (email === envVars.SUPER_ADMIN_EMAIL) { return; }
-                if(type === "email-verification"){
-                  const user = await prisma.user.findUnique({
-                    where : { email, }
-                  })
-
-                   if(!user){ return;}
-                   if(user && user.role === Role.SUPER_ADMIN){ return; }
-                  
-                    if (user && !user.emailVerified){
-                    sendEmail({
-                        to : email,
-                        subject : "Verify your email",
-                        templateName : "otp",
-                        templateData :{
-                            name : user.name,
-                            otp,
-                        }
-                    })
-                  }
-                }else if(type === "forget-password"){
-                    const user = await prisma.user.findUnique({
-                        where : { email, }
-                    })
-
-                    if(user){
-                        sendEmail({
-                            to : email,
-                            subject : "Password Reset OTP",
-                            templateName : "otp",
-                            templateData :{
-                                name : user.name,
-                                otp,
-                            }
-                        })
-                    }
-                }
-            },
-            expiresIn : 2 * 60, // 2 minutes in seconds
-            otpLength : 6,
-        })
     ],
 
     session: {
@@ -129,12 +61,8 @@ export const auth = betterAuth({
         updateAge: 60 * 60 * 60 * 24, // 1 day in seconds
         cookieCache: {
             enabled: true,
-            maxAge: 60 * 60 * 60 * 24, // 1 day in seconds
+            maxAge: 60 * 60 * 24, // 1 day in seconds
         }
-    },
-
-    redirectURLs:{
-        signIn : `${envVars.BETTER_AUTH_URL}/api/v1/auth/google/success`,
     },
 
     trustedOrigins: [process.env.BETTER_AUTH_URL || "http://localhost:5000", envVars.FRONTEND_URL],

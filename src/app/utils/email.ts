@@ -36,8 +36,13 @@ export const sendEmail = async ({
     attachments,
 }: SendEmailOptions) => {
     try {
-        const templatePath = path.resolve(process.cwd(), `src/app/templates/${templateName}.ejs`);
+        console.log(`Attempting to send email to ${to} with template ${templateName}...`);
+        
+        // Verify connection configuration
+        await transporter.verify();
+        console.log("SMTP connection verified successfully.");
 
+        const templatePath = path.resolve(process.cwd(), `src/app/templates/${templateName}.ejs`);
         const html = await ejs.renderFile(templatePath, templateData);
 
         const info = await transporter.sendMail({
@@ -52,9 +57,16 @@ export const sendEmail = async ({
             })),
         });
 
-        console.log(`Email sent to ${to} : ${info.messageId}`);
+        console.log(`Email sent successfully to ${to}. Message ID: ${info.messageId}`);
     } catch (error: any) {
-        console.error("Email Sending Error", error.message);
-        throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to send email");
+        console.error("CRITICAL: Email Sending Failed!");
+        console.error("Error Message:", error.message);
+        console.error("SMTP Config used:", {
+            host: envVars.EMAIL_SENDER.SMTP_HOST,
+            port: envVars.EMAIL_SENDER.SMTP_PORT,
+            user: envVars.EMAIL_SENDER.SMTP_USER,
+            from: envVars.EMAIL_SENDER.SMTP_FROM
+        });
+        throw new AppError(status.INTERNAL_SERVER_ERROR, `Failed to send email: ${error.message}`);
     }
 };
