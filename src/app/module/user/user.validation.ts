@@ -22,6 +22,6 @@ export const createAdminValidationSchema = z.object({
 });
 
 export const updateUserValidationSchema = z.object({
-    status: z.enum(['ACTIVE', 'BLOCKED', 'DELETED', 'PENDING']).optional(),
+    status: z.enum(['ACTIVE', 'BLOCKED', 'DELETED']).optional(),
     createdAt: z.string().optional().transform((str) => str ? new Date(str) : undefined),
 });

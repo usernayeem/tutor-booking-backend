@@ -51,7 +51,7 @@ const createSession = async (user: IRequestUser, payload: ICreateSessionPayload)
                 studentId: student.id,
                 tutorId,
                 scheduleId,
-                status: SessionStatus.PENDING,
+                status: SessionStatus.SCHEDULED,
                 paymentStatus: PaymentStatus.UNPAID,
             }
         });
